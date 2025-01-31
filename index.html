@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Dialogues</title>
+    <script>
+        async function getRandomDialogue() {
+            const response = await fetch('http://127.0.0.1:8000/random-dialogue');
+            console.log(response);
+            const data = await response.json();
+            document.getElementById('dialogue').innerHTML = `"${data.dialogue}" - ${data.movie}`;
+        }
+
+        async function getDialogueByMovie() {
+            const movieName = document.getElementById('movieName').value;
+            const response = await fetch(`http://127.0.0.1:8000/dialogue/${movieName}`);
+            const data = await response.json();
+            if (data.error) {
+                document.getElementById('dialogue').innerHTML = data.error;
+            } else {
+                document.getElementById('dialogue').innerHTML = `"${data[0].dialogue}" - ${data[0].movie}`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Movie Dialogue API</h1>
+    <button onclick="getRandomDialogue()">Get Random Dialogue</button>
+    <br>
+    <input type="text" id="movieName" placeholder="Enter Movie Name">
+    <button onclick="getDialogueByMovie()">Get Dialogue By Movie</button>
+    <p id="dialogue"></p>
+</body>
+</html>
